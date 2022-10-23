@@ -1,4 +1,4 @@
-package study.security1.auth;
+package study.security1.config.auth;
 
 // 시큐리티가 /login 주소 요청이 오면 낚아채서 로그인을 진행시킴
 // 로그인을 진행이 완료가 되면 시큐리티 session을 만들어줍니다.
@@ -7,19 +7,31 @@ package study.security1.auth;
 // User오브젝트타입 => UserDetails 타입 객체
 
 
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import study.security1.domain.User;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 
-public class PrincipalDetails implements UserDetails {
+@Getter
+public class PrincipalDetails implements UserDetails, OAuth2User {
 
     private final User user;
+    private Map<String, Object> attributes;
 
+    // 일반 로그인
     public PrincipalDetails(User user) {
         this.user = user;
+    }
+
+    // oauth 로그인
+    public PrincipalDetails(User user, Map<String, Object> attributes) {
+        this.user = user;
+        this.attributes = attributes;
     }
 
     @Override // 해당 유저의 권한을 리턴하는 곳
@@ -62,5 +74,15 @@ public class PrincipalDetails implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    public Map<String, Object> getAttributes() {
+        return attributes;
+    }
+
+    @Override
+    public String getName() {
+        return null;
     }
 }

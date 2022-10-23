@@ -1,9 +1,6 @@
 package study.security1.domain;
 
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.Entity;
@@ -25,6 +22,19 @@ public class User {
     private String email;
     private String role;
 
+    private String provider;
+    private String providerId;
+
     @CreationTimestamp
     private LocalDate createDate;
+
+    @Builder
+    public User(String username, String password, String email, String role, String provider, String providerId) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.role = role;
+        this.provider = provider;
+        this.providerId = providerId;
+    }
 }
