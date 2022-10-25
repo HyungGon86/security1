@@ -21,20 +21,20 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder; // 비밀번호 인코딩위해서 주입받음
     private final UserRepository userRepository;
 
-    // 구글로부터 받은 userRequest 후처리되는 함수
+    // oauth2 provider 로부터받은 userRequest 후처리되는 함수
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
 
-        OAuth2User oAuth2User = super.loadUser(userRequest);
+        OAuth2User oAuth2User = super.loadUser(userRequest); // 프로바이더에서 제공받은 유저정보가 담겨잇음
 
-        System.out.println("userRequest.getClientRegistration() = " + userRequest.getClientRegistration());
-        System.out.println("oAuth2User.getAttributes() = " + oAuth2User.getAttributes());
+        System.out.println("userRequest.getClientRegistration() = " + userRequest.getClientRegistration()); // 해당 유저정보의 제공자
+        System.out.println("oAuth2User.getAttributes() = " + oAuth2User.getAttributes()); // 가지고 있는 모든 유저정보
 
         // 회원가입을 강제로 진행해볼 예정
-        Oauth2UserInfo oauth2UserInfo = null;
+        Oauth2UserInfo oauth2UserInfo = null; // 각각 프로바이더마다 제공해주는 정보가 다르기때문에 인터페이스로 가져올정보 공통적으로 선언하고 각각 프로바이더가 구현해서 하나로 처리
         if (userRequest.getClientRegistration().getRegistrationId().equals("google")) {
             System.out.println("구글 로그인 요청");
             oauth2UserInfo = new GoogleUserInfo(oAuth2User.getAttributes());
@@ -49,7 +49,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         }
 
         String username = oauth2UserInfo.getProvider() + "_" + oauth2UserInfo.getProviderId();
-        String password = bCryptPasswordEncoder.encode("겟인데어");
+        String password = bCryptPasswordEncoder.encode("겟인데어"); // 단방향 해쉬에 랜덤으로 막 쓰까서 개속 다른비밀번호로 나옴 디코딩 불가능
         String role = "ROLE_USER";
 
         User userEntity = userRepository.findByUsername(username);

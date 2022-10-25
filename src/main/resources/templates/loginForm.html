@@ -9,13 +9,20 @@
 <body>
 <h1>로그인 페이지</h1>
 <hr>
-<form action="/login" method="post">
+<form th:action="@{/login}" method="post">
     <input type="text" name="username" placeholder="Username">
     <br>
     <input type="password" name="password" placeholder="Password">
     <br>
+    <input type="checkbox" id="remember-me" name="remember-me"> <span>로그인 유지</span>
+    <br>
     <button>로그인</button>
 </form>
+<div th:if="error">
+    <p id="valid" style="color: red; font-size: 12px;">
+        <a th:text="${exception}"></a>
+    </p>
+</div>
 <a href="/oauth2/authorization/google">구글 로그인</a>
 <a href="/oauth2/authorization/facebook">페이스북 로그인</a>
 <a href="/oauth2/authorization/naver">네이버 로그인</a>

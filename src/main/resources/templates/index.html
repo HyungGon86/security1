@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,5 +8,26 @@
 </head>
 <body>
 <h1>인덱스페이지</h1>
+<a href="/user">유저페이지버튼</a>
+
+<div sec:authorize="isAuthenticated()">
+    <br><br>
+
+    인증이 되었다면 로그아웃 버튼이 나타남
+    <a href="/logout">로그아웃</a>
+
+    <p>Authenticated DTO:</p> <!-- 인증 주체 자체를 출력하는데 해당 객체에서 아이디를 꺼낼수도 있음 -->
+    <span sec:authentication="principal"></span>
+
+    <p>Authenticated username:</p> <!-- 인증 주체에 아이디를 출력 -->
+    <span sec:authentication="name"></span>
+
+    <p>Authenticated user role:</p>  권한 출력하기
+    <span sec:authentication="principal.authorities"></span>
+
+    <h1 sec:authorize="hasRole('ROLE_USER')">Has user Role</h1>  해당 권한을 가지고 있는지 체크
+</div>
+
+
 </body>
 </html>
